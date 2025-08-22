@@ -1,0 +1,96 @@
+/*
+Intento replicar: Avengers: Endgame
+Clases que representan personajes, héroes, villanos, misiones y equipos.
+*/
+
+data class Personaje(
+    val id: Int,
+    val nombre: String,
+    val nombreHeroe: String,
+    val actor: String,
+    val rol: String
+) {
+    fun presentarse(): String {
+        return "Soy $nombre ($nombreHeroe), interpretado por $actor. Rol: $rol"
+    }
+}
+
+// Clase para héroes con poderes y métodos de acción
+class Heroe(val personaje: Personaje, val fuerza: Int) {
+    fun salvar(): String {
+        return "${personaje.nombreHeroe} usa su fuerza $fuerza para salvar el día!"
+    }
+}
+
+// Clase para villanos con poderes
+class Villano(val nombre: String, val poder: String) {
+    fun atacar(): String {
+        return "$nombre ataca usando su poder: $poder"
+    }
+}
+
+// Clase para misiones donde participan varios personajes
+class Mision(val nombre: String, val participantes: List<Personaje>) {
+    fun iniciar(): String {
+        val nombres = participantes.joinToString { it.nombreHeroe }
+        return "Misión '$nombre' iniciada por: $nombres"
+    }
+}
+
+// Clase para equipos de héroes
+class Equipo(val nombre: String, val miembros: List<Heroe>) {
+    fun mostrarEquipo(): String {
+        val lista = miembros.joinToString { it.personaje.nombreHeroe }
+        return "El equipo $nombre está formado por: $lista"
+    }
+}
+
+// Objeto singleton que funciona como base de datos
+object MarvelDatabase {
+    fun obtenerPersonajesEndgame(): List<Personaje> {
+        return listOf(
+            Personaje(1, "Tony Stark", "Iron Man", "Robert Downey Jr.", "Se sacrifica para salvar el universo."),
+            Personaje(2, "Steve Rogers", "Capitán América", "Chris Evans", "Devuelve las Gemas del Infinito y vive en el pasado."),
+            Personaje(3, "Thor Odinson", "Thor", "Chris Hemsworth", "Se une a los Guardianes de la Galaxia."),
+            Personaje(4, "Bruce Banner", "Smart Hulk", "Mark Ruffalo", "Fusiona su inteligencia con la fuerza de Hulk."),
+            Personaje(5, "Natasha Romanoff", "Black Widow", "Scarlett Johansson", "Se sacrifica en Vormir.")
+        )
+    }
+}
+
+fun main() {
+    // Obtener personajes
+    val personajes = MarvelDatabase.obtenerPersonajesEndgame()
+
+    // Crear héroes
+    val ironMan = Heroe(personajes[0], 95)
+    val capitanAmerica = Heroe(personajes[1], 90)
+    val thor = Heroe(personajes[2], 100)
+
+    // Crear villanos
+    val thanos = Villano("Thanos", "Destruir el universo con el Guantelete")
+
+    // Crear misión
+    val misionFinal = Mision("Recuperar las Gemas del Infinito", personajes)
+
+    // Crear equipo
+    val vengadores = Equipo("Vengadores", listOf(ironMan, capitanAmerica, thor))
+
+    // Mostrar información
+    println("--- Presentación de Personajes ---")
+    personajes.forEach { println(it.presentarse()) }
+
+    println("\n--- Acciones de Héroes ---")
+    println(ironMan.salvar())
+    println(capitanAmerica.salvar())
+    println(thor.salvar())
+
+    println("\n--- Villano en acción ---")
+    println(thanos.atacar())
+
+    println("\n--- Misión ---")
+    println(misionFinal.iniciar())
+
+    println("\n--- Equipo ---")
+    println(vengadores.mostrarEquipo())
+}
